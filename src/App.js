@@ -1,16 +1,14 @@
 import React from 'react';
 import './App.css';
 
-import FontButton from './components/fontButton';
-import Text from './components/text';
+import TodoList from './components/TodoList';
+
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <FontButton/>
-
-        <Text/>
+        <TodoList/>
       </header>
     </div>
   );
