@@ -1,4 +1,4 @@
-import { atom, selector } from 'recoil';
+import { atom, selector, selectorFamily, waitForAll } from 'recoil';
 
 const todoListState = atom({
     key: 'todoListState',
@@ -45,9 +45,67 @@ const filteredTodoListState = selector({
     },
   });
 
+const currentUserIDState = atom({
+    key: 'CurrentUserID',
+    default: 1,
+  });
+
+const currentUserInfoQuery = selector({
+    key: 'CurrentUserName',
+    get: async ({get}) => {
+      const response = await fetch(`http://swapi.dev/api/people/${get(currentUserIDState)}`);
+
+      if (response.ok) { 
+        let json = await response.json();
+
+        return json;
+      } 
+        return 'Error';
+      
+    },
+  });
+
+  const currentUserNameQuery = selector({
+      key: 'currentUserName',
+      get: ({get}) => {
+        const user = get(currentUserInfoQuery);
+
+        return user.name
+      }
+  })
+
+  const currentMovieQuery = selectorFamily({
+    key: 'CurrentMovie',
+    get: filmUrl => async ({get}) => {
+      const response = await fetch(filmUrl);
+
+      if (response.ok) { 
+        let json = await response.json();
+
+        return json;
+      } 
+
+     return 'Error';
+    },
+  });
+
+  const moviesInfoQuery = selector({
+    key: 'MoviesInfoQuery',
+    get: ({get}) => {
+      const {films} = get(currentUserInfoQuery);
+      if (!films || !films.length) {
+          return []
+      }
+      return get(waitForAll(films.map(filmUrl => currentMovieQuery(filmUrl))));
+    },
+  });
+
 export {
     todoListState,
     todoListFilterState,
     filteredTodoListState,
-    todoListStatsState
+    todoListStatsState,
+    currentUserNameQuery,
+    currentUserIDState,
+    moviesInfoQuery
 }
