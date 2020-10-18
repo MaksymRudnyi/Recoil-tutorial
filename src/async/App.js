@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { currentUserIDState, moviesInfoQuery } from '../atoms';
+import { currentUserIDState } from '../atoms';
 
 import CurrentUserInfo from './CurrentUserInfo';
 import ChangeUser from './ChangeUser';
@@ -9,17 +9,17 @@ import UserMovies from './UserMovies';
 
 const AsyncApp = () => {
     const currentUserId = useRecoilValue(currentUserIDState);
-    
+
 
     return (
         <div>
             <p>User id: {currentUserId}</p>
-            <ChangeUser/>
+            <ChangeUser />
             <React.Suspense fallback={<div>Loading...</div>}>
-                <CurrentUserInfo/>
+                <CurrentUserInfo />
             </React.Suspense>
             <React.Suspense fallback={<div>Loading22...</div>}>
-                <UserMovies/>
+                <UserMovies />
             </React.Suspense>
         </div>
     )
